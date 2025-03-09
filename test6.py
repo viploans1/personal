@@ -1,7 +1,6 @@
 import random
 import time
 import os
-from datetime import datetime, timedelta
 from instagrapi import Client
 import config
 from colorama import Fore, init
@@ -13,15 +12,15 @@ init(autoreset=True)
 
 # Set up logging
 logger = logging.getLogger()
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
-# Daily Like Limit
-MIN_LIKES_PER_DAY = 198
-MAX_LIKES_PER_DAY = 215
+# Daily like limit
+DAILY_LIKE_LIMIT = random.randint(198, 212)
 likes_today = 0
-reset_time = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
 
 def login_user():
+    """
+    Logs in to Instagram, creating a session if it doesn't exist or is invalid.
+    """
     cl = Client()
     session_file = "session.json"
     login_via_session = False
@@ -31,6 +30,7 @@ def login_user():
         try:
             cl.load_settings(session_file)
             cl.login(config.username, config.password)
+            # Check if the session is still valid
             try:
                 cl.get_timeline_feed()
                 print(f"{Fore.GREEN}Logged in using session!")
@@ -55,10 +55,14 @@ def login_user():
     if not login_via_pw and not login_via_session:
         raise Exception("Couldn't log in with either session or password.")
 
+    # Save the new session
     cl.dump_settings(session_file)
     print(f"{Fore.CYAN}Session saved successfully!")
     time.sleep(random.uniform(2, 5))
     return cl
+
+# Log in using the function
+cl = login_user()
 
 class LikePost:
     def __init__(self, client):
@@ -87,40 +91,34 @@ class LikePost:
         ]
         self.liked_medias = []
         self.elapsed_time = 0
-        self.daily_like_limit = random.randint(MIN_LIKES_PER_DAY, MAX_LIKES_PER_DAY)
-        print(f"{Fore.BLUE}Today's like limit: {self.daily_like_limit} likes")
 
     def like_post(self, amount):
-        global likes_today, reset_time
-
+        global likes_today
         for i in range(amount):
-            if datetime.now() >= reset_time:
-                likes_today = 0
-                reset_time = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
-                self.daily_like_limit = random.randint(MIN_LIKES_PER_DAY, MAX_LIKES_PER_DAY)
-                print(f"{Fore.BLUE}New day's like limit: {self.daily_like_limit} likes")
+            if likes_today >= DAILY_LIKE_LIMIT:
+                print(f"{Fore.RED}Daily like limit reached ({DAILY_LIKE_LIMIT} likes). Stopping for today.")
+                return
 
-            if likes_today >= self.daily_like_limit:
-                print(f"{Fore.RED}Reached today's like limit! Stopping for today.")
-                break
-
-            random_post = self.get_post_id_from_hashtags()
+            if random.random() < 0.7:
+                random_post = self.get_post_id_from_following()
+            else:
+                random_post = self.get_post_id_from_hashtags()
+            
             if random_post and random_post not in self.liked_medias:
                 try:
                     self.cl.media_like(media_id=random_post)
                     self.liked_medias.append(random_post)
                     likes_today += 1
-                    print(f"{Fore.GREEN}Liked post {likes_today}/{self.daily_like_limit}")
-
-                    time.sleep(random.randint(20, 60))
+                    random_delay = random.randint(20, 60)
+                    self.elapsed_time += random_delay
+                    print(f"Total likes: {likes_today} | Time elapsed: {self.elapsed_time / 60:.2f} minutes | Pausing for {random_delay} seconds")
+                    time.sleep(random_delay)
                 except Exception as e:
                     print(f"{Fore.RED}Error while liking the post: {e}")
             else:
                 print("Skipping this post to keep things natural.")
-                time.sleep(random.randint(30, 90))
 
 try:
-    cl = login_user()
     bot = LikePost(cl)
     bot.like_post(600)
 except Exception as e:
