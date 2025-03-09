@@ -100,16 +100,18 @@ class InstaBot:
             logging.error(f"❌ Error fetching post from following: {e}")
             return None
     
-    def get_post_from_hashtags(self):
-        """🚀 Fetches a recent post from a hashtag 🚀"""
-        try:
-            selected_tag = random.choice(self.tags)
-            print(f"{Fore.YELLOW}🔍 Searching posts from #{selected_tag}...")
-            medias = self.cl.hashtag_medias_recent(selected_tag, amount=1)
-            return str(medias[0].id) if medias else None
-        except Exception as e:
-            logging.error(f"❌ Error fetching post via hashtag: {e}")
-            return None
+    def run(self, amount):
+        """🚀 Runs the bot, liking posts from both hashtags and followed users 🚀"""
+        for _ in range(amount):
+            post_id = self.get_post_from_following() if random.random() < 0.5 else self.get_post_from_hashtags()
+            if post_id and post_id not in self.liked_medias:
+                if self.interact_with_post(post_id):
+                    self.liked_medias.append(post_id)
+                    self.wait_time(random.randint(20, 60))
+                else:
+                    print(f"{Fore.RED}⚠️ Skipping post due to error.")
+            else:
+                print(f"{Fore.YELLOW}⏭️ Skipping duplicate or unavailable post.")
     
 try:
     bot = InstaBot(cl)
@@ -117,4 +119,3 @@ try:
 except Exception as e:
     logging.error(f"❌ Fatal error: {e}")
     print(f"{Fore.RED}❌ A fatal error occurred: {e}")
-
