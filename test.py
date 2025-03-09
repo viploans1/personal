@@ -176,7 +176,7 @@ class LikePost:
 
 try:
     bot = LikePost(cl)
-    bot.like_post(600)
+    bot.like_post(207)
 except Exception as e:
     print(f"{Fore.RED}A fatal error occurred: {e}")
     input("Press Enter to exit...")
