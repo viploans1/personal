@@ -74,16 +74,14 @@ class InstagramBot:
             logger.error(f"Login failed: {e}")
             print(f"{Fore.RED}Login failed. Check logs for details.")
 
-    def get_post_id(self):
-        """Fetches a post ID from hashtags."""
-        try:
-            tag = random.choice(self.tags)
-            medias = self.cl.hashtag_medias_recent(tag, amount=1)
-            if medias:
-                return medias[0].id
-        except Exception as e:
-            logger.error(f"Error fetching post ID: {e}")
-        return None
+    def simulate_behavior(self):
+        """Mimics human scrolling and engagement behavior."""
+        actions = ["Scrolling feed", "Checking out a profile", "Watching stories", "Taking a break"]
+        action = random.choice(actions)
+        delay = random.randint(5, 20)
+        print(f"{Fore.MAGENTA}{action} for {delay} seconds...")
+        time.sleep(delay)
+        print(f"{Fore.MAGENTA}Done.")
 
     def like_post(self):
         """Likes posts intelligently, avoiding spam triggers and staying within the daily limit."""
