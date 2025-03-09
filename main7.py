@@ -89,14 +89,15 @@ class InstaBot:
         self.daily_like_limit = 300
         self.like_count = 0
     
-    def get_post_from_hashtags(self):
+    def get_post_from_following(self):
+        """🚀 Fetches a recent post from a followed user 🚀"""
         try:
-            selected_tag = random.choice(self.tags)
-            print(f"{Fore.YELLOW}🔍 Searching posts from #{selected_tag}...")
-            medias = self.cl.hashtag_medias_recent(selected_tag, amount=1)
-            return str(medias[0].id) if medias else None
+            following = self.cl.user_following(self.cl.user_id)
+            user_id = random.choice(list(following.keys()))
+            user_posts = self.cl.user_medias(user_id, amount=1)
+            return str(user_posts[0].id) if user_posts else None
         except Exception as e:
-            logging.error(f"❌ Error fetching post via hashtag: {e}")
+            logging.error(f"❌ Error fetching post from following: {e}")
             return None
     
     def interact_with_post(self, media_id):
@@ -128,3 +129,4 @@ try:
 except Exception as e:
     logging.error(f"❌ Fatal error: {e}")
     print(f"{Fore.RED}❌ A fatal error occurred: {e}")
+
