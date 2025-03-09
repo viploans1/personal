@@ -24,8 +24,26 @@ class InstagramBot:
         self.elapsed_time = 0
         self.daily_like_limit = random.randint(189, 205)
         self.tags = [
-            'dreamhome', 'homebuying', 'palmdale', 'lancaster', 'firsttimebuyer', 'homeforsale',
-            'realestateinvesting', 'mortgagebroker', 'homeownerlife', 'justsold', 'luxuryhomes'
+            'Happyhomeowner', 'Firsthomeowner', 'dreamhome', 'womenwholead', 'bwofgod', 'womanofgod', 
+            'jesuslovesyou', 'AVwomen', 'exprealty', 'Avrealty', 'palmdalerealestate', 'lancasterrealestate', 
+            'palmdale', 'lancaster', 'firsttimebuyer', 'Realbrokerage', 'openhouse', 'coldwellbankerhartwig', 
+            'santaclaritahomes', 'AVseller', 'homesweethome', 'realestategoals', 'kellerwilliams', 'Rosamond', 
+            '661realestate', 'azrealtor', 'downpaymentassistance', 'AntelopeValleyRealtor', 'PalmdaleRealtor', 
+            'LancasterCARealtor', 'AVRealtors', 'PalmdaleHomesForSale', 'LancasterHomesForSale', 
+            'AntelopeValleyRealEstate', 'PalmdaleRealEstate', 'LancasterCARealEstate', 'AntelopeValleyLiving', 
+            'PalmdaleLiving', 'LancasterCALiving', 'AVLuxuryHomes', 'AVNewHomes', 'AVHomeLoans', 'AntelopeValleyMortgage', 
+            'PalmdaleMortgageLender', 'LancasterCAMortgage', 'HomeBuyingMadeEasy', 'RealtorNetworking', 
+            'RealtorMarketing', 'RealEstateGrowth', 'AVInvestors', 'FirstTimeHomeBuyerAV', 'HomeBuyersPalmdale', 
+            'BuySellInvestAV', 'RealtorsOfInstagram', 'CaliforniaRealtors', 'RealEstateLife', 'RealtorGoals', 
+            'RealtorSuccess', 'RealEstateMarketing', 'RealEstateInvesting', 'HouseHunting', 'JustListed', 
+            'HomeOwnerLife', 'MyFirstHome', 'ForeverHome', 'DreamHomeGoals', 'HomeSweetHome', 'HouseToHome', 
+            'NewHomeJourney', 'HomeOwnersUnite', 'FirstTimeBuyerTips', 'HomeBuying101', 'MortgageMadeEasy', 
+            'HomeLoanExperts', 'HomeBuyingProcess', 'HomeLoanHelp', 'HomeFinance', 'SellingYourHome', 'ReadyToSell', 
+            'TimeToMove', 'HouseForSaleNow', 'ListYourHome', 'SellYourHomeFast', 'BestTimeToSell', 
+            'AntelopeValleyHomes', 'PalmdaleLiving', 'LancasterLiving', 'MoveToAV', 'AVHomesForSale', 
+            'LiveInPalmdale', 'LiveInLancaster', 'BuyAHomeInAV', 'LuxuryHomesAV', 'AVInvestmentProperties', 
+            'CaliforniaLuxuryHomes', 'RealEstateInvestorAV', 'RealtorLife', 'HomeBuyingMadeSimple', 
+            'DreamHomeLoading', 'RealtorSuccessStories', 'HelpingHomeowners', 'HouseHunters'
         ]
         self.comment_list = [
             "Amazing! 🔥", "Love this! 😍", "Great post! 👏", "Incredible view! 😎", "Beautiful home! 🏡",
@@ -86,7 +104,7 @@ class InstagramBot:
                     logger.error(f"Error liking post: {e}")
             else:
                 print(f"{Fore.YELLOW}Skipping post to maintain natural behavior.")
-            
+
     def comment_on_post(self, post_id):
         """Comments on a post."""
         try:
@@ -96,26 +114,9 @@ class InstagramBot:
         except Exception as e:
             logger.error(f"Error commenting: {e}")
 
-    def simulate_behavior(self):
-        """Mimics human scrolling and engagement behavior."""
-        actions = [
-            "Scrolling feed", "Checking out a profile", "Watching stories", "Taking a break"
-        ]
-        action = random.choice(actions)
-        delay = random.randint(5, 20)
-        print(f"{Fore.MAGENTA}{action} for {delay} seconds...")
-        time.sleep(delay)
-        print(f"{Fore.MAGENTA}Done.")
-
-    def wait(self, delay):
-        """Waits before performing the next action."""
-        for i in range(delay, 0, -1):
-            print(f"{Fore.YELLOW}Pausing... {i}s", end="\r")
-            time.sleep(1)
-        print(f"{Fore.GREEN}Resuming activity.")
-
 if __name__ == "__main__":
     print(f"{Fore.BLUE}Starting Instagram Bot...")
     bot = InstagramBot()
     bot.login()
     bot.like_post()
+
