@@ -112,3 +112,4 @@ try:
 except Exception as e:
     print(f"{Fore.RED}A fatal error occurred: {e}")
     input("Press Enter to exit...")
+
