@@ -1,4 +1,5 @@
-import random
+
+  import random
 import time
 import os
 import logging
@@ -100,18 +101,23 @@ class InstaBot:
             logging.error(f"❌ Error fetching post from following: {e}")
             return None
     
-    def run(self, amount):
-        """🚀 Runs the bot, liking posts from both hashtags and followed users 🚀"""
-        for _ in range(amount):
-            post_id = self.get_post_from_following() if random.random() < 0.5 else self.get_post_from_hashtags()
-            if post_id and post_id not in self.liked_medias:
-                if self.interact_with_post(post_id):
-                    self.liked_medias.append(post_id)
-                    self.wait_time(random.randint(20, 60))
-                else:
-                    print(f"{Fore.RED}⚠️ Skipping post due to error.")
-            else:
-                print(f"{Fore.YELLOW}⏭️ Skipping duplicate or unavailable post.")
+    def interact_with_post(self, media_id):
+        """🚀 Likes and comments on a post 🚀"""
+        if self.like_count >= self.daily_like_limit:
+            print(f"{Fore.RED}⚠️ Daily like limit reached! Stopping bot.")
+            return False
+        try:
+            self.cl.media_like(media_id)
+            print(f"{Fore.GREEN}✅ Liked post: {media_id} 🚀")
+            self.like_count += 1
+            if random.random() < 0.3:
+                comment = random.choice(self.comment_messages)
+                self.cl.media_comment(media_id, comment)
+                print(f"{Fore.CYAN}💬 Commented: {comment} 🚀")
+            return True
+        except Exception as e:
+            logging.error(f"❌ Error interacting with post {media_id}: {e}")
+            return False
     
 try:
     bot = InstaBot(cl)
